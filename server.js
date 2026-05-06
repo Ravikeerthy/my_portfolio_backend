@@ -1,11 +1,13 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
 dotenv.config();
 
 const app = express();
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 app.use(
   cors({
@@ -22,22 +24,11 @@ app.post("/api/contact", async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      family: 4,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_USER,
+    await resend.emails.send({
+      from: "Portfolio Contact <onboarding@resend.dev>",
+      to: process.env.TO_EMAIL,
       replyTo: email,
-      subject: `Portfolio Contact: ${name}`,
+      subject: `Portfolio message from ${name}`,
       html: `
         <h2>New Portfolio Message</h2>
         <p><b>Name:</b> ${name}</p>

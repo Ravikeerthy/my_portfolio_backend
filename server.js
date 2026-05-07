@@ -24,9 +24,9 @@ app.post("/api/contact", async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    await resend.emails.send({
+    const data = await resend.emails.send({
       from: "Portfolio Contact <onboarding@resend.dev>",
-      to: process.env.TO_EMAIL,
+      to: process.env.EMAIL_USER,
       replyTo: email,
       subject: `Portfolio message from ${name}`,
       html: `
@@ -38,6 +38,7 @@ app.post("/api/contact", async (req, res) => {
       `,
     });
 
+    console.log("Resend response:", data);
     res.status(200).json({ message: "Message sent successfully" });
   } catch (error) {
     console.error("Contact error:", error);

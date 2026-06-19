@@ -11,7 +11,8 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://keerthyportfolio.netlify.app"],
+     credentials: true,
   }),
 );
 app.use(express.json());
